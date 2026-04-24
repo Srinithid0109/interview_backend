@@ -11,10 +11,15 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://interview-frontend-67jr39013-srinithi-ds-projects-66929d6a.vercel.app'
-  ],
+  origin: function(origin, callback) {
+    if (!origin || 
+        origin.includes('vercel.app') || 
+        origin.includes('localhost')) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true
 }))
 app.use(express.json())
